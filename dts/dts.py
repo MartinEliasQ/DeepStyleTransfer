@@ -1,5 +1,6 @@
 from dts import load_image
-import tensorflow.keras as keras
+import tensorflow as tf
+from tensorflow import keras
 
 
 class dts(object):
