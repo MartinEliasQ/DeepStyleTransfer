@@ -1,11 +1,11 @@
-#from dts import load_images
+# from dts import load_images
 import tensorflow as tf
 from tensorflow import keras
 
 
-class dts(object):
+class dst(object):
     """
-    Deep Transfer Style Class
+    Deep  Style Transfer Class
     """
 
     def __init__(self, *args):
