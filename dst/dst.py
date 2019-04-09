@@ -1,6 +1,7 @@
 # from dts import load_images
 import tensorflow as tf
 from tensorflow import keras
+K = keras.backend
 
 
 class dst(object):
@@ -20,10 +21,17 @@ class dst(object):
 
     @staticmethod
     def _freeze_layers(model):
+        """"""
         for layer in model.layers:
             layer.trainable = False
         return model
 
     @staticmethod
-    def _get_layers(model):
+    def _get_layer(model, layer):
+        """"""
         pass
+
+    @staticmethod
+    def _gram_matrix(feacture_map):
+        """"""
+        return K.dot(feacture_map, K.transpose(feacture_map))
