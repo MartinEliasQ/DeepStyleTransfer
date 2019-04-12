@@ -27,11 +27,23 @@ class dst(object):
         return model
 
     @staticmethod
-    def _get_layer(model, layer):
-        """"""
-        pass
+    def _get_layers(model):
+        layers = {layer.name: layer.output for layer in model.layers}
+        return layers
 
     @staticmethod
     def _gram_matrix(feacture_map):
         """"""
         return K.dot(feacture_map, K.transpose(feacture_map))
+
+    @staticmethod
+    def _content_loss(content, generated):
+        pass
+
+    @staticmethod
+    def _style_loss(style, generated):
+        pass
+
+    @staticmethod
+    def total_loss(content_loss, style_loss):
+        return content_loss + style_loss
