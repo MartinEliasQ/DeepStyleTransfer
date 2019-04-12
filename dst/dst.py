@@ -1,4 +1,6 @@
 # from dts import load_images
+import sys 
+
 import tensorflow as tf
 from tensorflow import keras
 K = keras.backend
@@ -47,3 +49,9 @@ class dst(object):
     @staticmethod
     def total_loss(content_loss, style_loss):
         return content_loss + style_loss
+
+    @staticmethod
+    def _get_version():
+        print('Python version: ', sys.version_info[0])
+        print('TensoFlow version: ', tf.__version__)
+        print('Keras version: ',keras.__version__)
