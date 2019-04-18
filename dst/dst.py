@@ -1,6 +1,6 @@
 # from dts import load_images
-import sys 
-
+import sys
+import dst.tools as tools
 import tensorflow as tf
 from tensorflow import keras
 K = keras.backend
@@ -12,6 +12,7 @@ class dst(object):
     """
 
     def __init__(self, *args):
+        dst._get_version()
         pass
 
     @staticmethod
@@ -40,7 +41,7 @@ class dst(object):
 
     @staticmethod
     def _content_loss(content, generated):
-        pass
+        return K.sum(K.square(content, generated))
 
     @staticmethod
     def _style_loss(style, generated):
@@ -52,6 +53,15 @@ class dst(object):
 
     @staticmethod
     def _get_version():
-        print('Python version: ', sys.version_info[0])
+        print("Python version: {}.{}".format(
+            sys.version_info[0], sys.version_info[1]))
         print('TensoFlow version: ', tf.__version__)
-        print('Keras version: ',keras.__version__)
+        print('Keras version: ', keras.__version__)
+
+    @staticmethod
+    def transfer_style(_content, _style):
+        content, style = tools.load_images(_content, _style)
+
+    @staticmethod
+    def _select_layer(parameter_list):
+        raise NotImplementedError
