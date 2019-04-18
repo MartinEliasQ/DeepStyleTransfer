@@ -83,11 +83,6 @@ def _scale_image(image, max_dim=512):
                          round(image.size[1]*scale)), Image.ANTIALIAS)
 
 
-def get_image_dim(image):
-    ''''''
-    return image.shape
-
-
 def _load_image(path_image, max_dim=512):
     img = _open_image(path_image)
     img = _scale_image(img, max_dim)
