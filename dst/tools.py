@@ -1,20 +1,29 @@
 """Generic tools"""
 import matplotlib.pyplot as plt
 import numpy as np
+import tensorflow as tf
 from tensorflow import keras
 from PIL import Image
+import requests
+from io import BytesIO
+import sys
 
 
-def _open_image(image_path: str = None):
+def _open_image(image_path: str = None, url=False):
     ''' Load the image that is in the  image_path
 
         Args:
              path_image(str): Source address where the image is located
+             url(bool): image_path is url
 
         Returns:
                 image: Image
     '''
     assert(image_path is not None), "You should provide an image path"
+    if url:
+        response = requests.get(image_path)
+        image_path = BytesIO(response.content)
+
     return Image.open(image_path)
 
 
@@ -166,4 +175,8 @@ def deprocess_img(processed_img, color_format="rgb"):
     return x
 
 
-img = _load_and_process_img("../images/perfil.jpg")
+def _get_version():
+    print("Python version: {}.{}".format(
+        sys.version_info[0], sys.version_info[1]))
+    print('TensoFlow version: ', tf.__version__)
+    print('Keras version: ', keras.__version__)
