@@ -10,11 +10,15 @@ import tensorflow.contrib.eager as tfe
 
 from tensorflow import keras
 from tensorflow.python.keras import models
+
+import IPython.display
+
 from PIL import Image
 import time
 
 K = keras.backend
-
+tf.enable_eager_execution()
+print("Eager execution: {}".format(tf.executing_eagerly()))
 CONTENT_LAYERS_LIST = ['block5_conv2']
 STYLE_LAYERS_LIST = ['block1_conv1',
                      'block2_conv1',
@@ -87,7 +91,8 @@ class dst(object):
                       content_layers=CONTENT_LAYERS_LIST,
                       style_layers=STYLE_LAYERS_LIST,
                       content_weight=1e5, style_weight=1e-3,
-                      num_iter=1000, init_image=None):
+                      variation_weight=0,
+                      num_iter=1000, init_image=None, variation=None):
 
         print(content_path, style_path,
               content_layers,
@@ -124,7 +129,7 @@ class dst(object):
         iter_count = 1
         best_loss, best_img = float('inf'), None
 
-        loss_weights = (style_weight, content_weight)
+        loss_weights = (style_weight, content_weight, variation_weight)
 
         cfg = {
             'model': model,
@@ -147,10 +152,10 @@ class dst(object):
         imgs = []
         for i in range(num_iter):
             # Compute grads
-            grads, all_loss = compute_grads(cfg)
+            grads, all_loss = dst.compute_grads(cfg)
 
             # Get Losses
-            loss, style_score, content_score = all_loss
+            loss, style_score, content_score, variation_score = all_loss
 
             # Step init_image
             opt.apply_gradients([(grads, init_image)])
@@ -180,13 +185,13 @@ class dst(object):
                       'content loss: {:.4e}, '
                       'time: {:.4f}s'.format(loss, style_score, content_score,
                                              time.time() - start_time))
-            print('Total time: {:.4f}s'.format(time.time() - global_start))
-            IPython.display.clear_output(wait=True)
-            plt.figure(figsize=(14, 4))
-            for i, img in enumerate(imgs):
-                plt.subplot(num_rows, num_cols, i+1)
-                plt.imshow(img)
-                plt.xticks([])
-                plt.yticks([])
+        print('Total time: {:.4f}s'.format(time.time() - global_start))
+        IPython.display.clear_output(wait=True)
+        plt.figure(figsize=(14, 4))
+        for i, img in enumerate(imgs):
+            plt.subplot(num_rows, num_cols, i+1)
+            plt.imshow(img)
+            plt.xticks([])
+            plt.yticks([])
 
-            return best_img, best_loss
+        return best_img, best_loss
