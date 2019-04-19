@@ -106,7 +106,7 @@ def imshow(img, title=None):
     plt.imshow(out)
     if title is not None:
         plt.title(title)
-        plt.imshow(out)
+    plt.imshow(out)
 
 
 def _load_and_process_img(path_image, max_dim=512):
@@ -163,8 +163,8 @@ def deprocess_img(processed_img, color_format="rgb"):
     # The width and height are not affected.
     # Source:
     # https://stackoverflow.com/questions/4661557/pil-rotate-image-colors-bgr-rgb
-    if color_format == 'rgb':
-        x = x[:, :, ::-1]
+    # if color_format == 'rgb':
+    x = x[:, :, ::-1]
     # Clip Values between 0 and 255 (Pixel Values)
     x = np.clip(x, 0, 255).astype('uint8')
     return x
