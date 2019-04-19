@@ -41,7 +41,7 @@ def total_loss(losses):
 def compute_loss(model, loss_weights, init_image, gram_style_features,
                  content_features, num_style_layers):
 
-    style_weight, content_weight = loss_weights
+    style_weight, content_weight, variation_weight = loss_weights
 
     # Feed our init image through our model. This will give us the content and
     # style representations at our desired layers. Since we're using eager
@@ -53,6 +53,7 @@ def compute_loss(model, loss_weights, init_image, gram_style_features,
 
     style_score = 0
     content_score = 0
+    variation_score = 0
 
     # Accumulate style losses from all layers
     # Here, we equally weight each contribution of each loss layer
@@ -70,9 +71,11 @@ def compute_loss(model, loss_weights, init_image, gram_style_features,
         content_score += weight_per_content_layer * \
             content_loss(comb_content[0], target_content)
 
+    variation_score = total_variation_loss(init_image)
+
     style_score *= style_weight
     content_score *= content_weight
-
+    variation_score *= variation_weight
     # Get total loss
-    loss = style_score + content_score
-    return loss, style_score, content_score
+    loss = style_score + content_score + variation_score
+    return loss, style_score, content_score, variation_score
