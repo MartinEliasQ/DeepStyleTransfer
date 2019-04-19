@@ -177,6 +177,7 @@ class dst(object):
                       'content loss: {:.4e}, '
                       'time: {:.4f}s'.format(loss, style_score, content_score,
                                              time.time() - start_time))
+
         print('Total time: {:.4f}s'.format(time.time() - global_start))
         IPython.display.clear_output(wait=True)
         plt.figure(figsize=(14, 4))
