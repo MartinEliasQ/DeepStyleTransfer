@@ -92,7 +92,7 @@ class dst(object):
                       style_layers=STYLE_LAYERS_LIST,
                       content_weight=1e3, style_weight=1e-2,
                       variation_weight=0,
-                      num_iter=1000, init_image=None):
+                      num_iter=1000, init_image=True):
 
         # Get New Model with the respective outputs(CNN layers)
         model = dst.get_model(content_layers, style_layers)
@@ -106,9 +106,13 @@ class dst(object):
             style_feature) for style_feature in style_features]
 
         # Set Init Image
-        if init_image is None:
+        if init_image is True:
             init_image = tools._load_and_process_img(content_path)
         else:
+            partial_image = tools._del_dim(tools._load_image(content_path))
+            h, w, c = partial_image.shape
+            init_image = np.random.rand(h, w, c) * 255
+            init_image = tools._add_dim(init_image)
             init_image = tf.keras.applications.vgg19.preprocess_input(
                 init_image)
 
