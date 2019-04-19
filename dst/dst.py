@@ -111,10 +111,10 @@ class dst(object):
         else:
             partial_image = tools._del_dim(tools._load_image(content_path))
             h, w, c = partial_image.shape
-            init_image = np.random.rand(h, w, c) * 255
-            init_image = tools._add_dim(init_image)
+            random_image = tools._add_dim(np.random.rand(h, w, c) * 255)
+
             init_image = tf.keras.applications.vgg19.preprocess_input(
-                init_image)
+                random_image)
 
         # Set in Tensor init image
         init_image = tfe.Variable(init_image, dtype=tf.float32)
