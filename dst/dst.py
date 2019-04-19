@@ -1,9 +1,26 @@
 # from dts import load_images
 import sys
 import dst.tools as tools
+import numpy as np
+
+import dst.losses as losses
 import tensorflow as tf
+import tensorflow.contrib.eager as tfe
+
 from tensorflow import keras
+from tensorflow.python.keras import models
+
+import time
+
 K = keras.backend
+
+CONTENT_LAYERS_LIST = ['block5_conv2']
+STYLE_LAYERS_LIST = ['block1_conv1',
+                     'block2_conv1',
+                     'block3_conv1',
+                     'block4_conv1',
+                     'block5_conv1'
+                     ]
 
 
 class dst(object):
@@ -30,61 +47,117 @@ class dst(object):
         return vgg19
 
     @staticmethod
-    def _freeze_layers(model):
-        """Freeze layers in the model
-           Args:
-                model: Model
-        """
-        for layer in model.layers:
-            layer.trainable = False
-        return model
+    def _get_feactuere_maps(model, content_path, style_path, num_style_layers):
+        content_image = tools._load_and_process_img(content_path)
+        style_image = tools._load_and_process_img(style_path)
+        style_outputs = model(style_image)
+        content_outputs = model(content_image)
+
+        style_features = [style_layer
+                          for style_layer in style_outputs[:num_style_layers]]
+        content_features = [content_layer
+                            for content_layer
+                            in content_outputs[num_style_layers:]]
+
+        return style_features, content_features
 
     @staticmethod
-    def _get_dict_layers(model):
-        ''' Get Layers in the dict in format {name:layer}
-            Args:
-                model: Model
-            Return:
-                  Dictionary with the layers and names.
-        '''
-        layers = {layer.name: layer.output for layer in model.layers}
-        return layers
+    def compute_grads(cfg):
+        # Create context to follow gradients
+        with tf.GradientTape() as tape:
+            all_loss = losses._compute_loss(**cfg)
+        # Compute gradients wrt input image
+        total_loss = all_loss[0]
+        return tape.gradient(total_loss, cfg['init_image']), all_loss
 
     @staticmethod
-    def _get_layers(model, layers):
-        ''' Get layers specify in layers
-            Args:
-                model: Model
-                layers: Array with the name of the layers
-            Return:
-                   Array with the specific layers
-        '''
-        return [model.get_layer(layer).output for layer in layers]
+    def get_model(content_layers, style_layers):
+        vgg = dst._get_vgg19()
+        vgg = tools._freeze_layers(vgg)
+        style_outputs = [vgg.get_layer(name).output for name in style_layers]
+        content_outputs = [vgg.get_layer(
+            name).output for name in content_layers]
+        model_outputs = style_outputs + content_outputs
+        new_model = models.Model(vgg.input, model_outputs)
+        return tools._freeze_layers(new_model)
 
     @staticmethod
-    def _gram_matrix(feacture_map):
-        ''' Compute gram matrix to get feactures of feacture map.
-            Reference: http://mathworld.wolfram.com/GramMatrix.html
-            Args:
-                feacture_map: Each convolutional Layer
-            Return:
-                  Dot product between flatten feacture map and
-                  the respective traspose
-        '''
-        return K.dot(feacture_map, K.transpose(feacture_map))
+    def tranfer_style(content_path, style_path,
+                      content_layers=CONTENT_LAYERS_LIST,
+                      style_layers=STYLE_LAYERS_LIST,
+                      content_weight=1e5, style_weight=1e-3,
+                      num_iter=1000, init_image=None):
 
-    @staticmethod
-    def _content_loss(content, generated):
-        return K.sum(K.square(content, generated))
+        print(content_path, style_path,
+              content_layers,
+              style_layers,
+              content_weight, style_weight,
+              num_iter, init_image)
 
-    @staticmethod
-    def _style_loss(style, generated):
-        pass
+        # Get New Model with the respective outputs(CNN layers)
+        model = dst.get_model(content_layers, style_layers)
 
-    @staticmethod
-    def total_loss(content_loss, style_loss):
-        return content_loss + style_loss
+        # Get  feacture maps for Style and Content
+        style_features, content_features = dst._get_feactuere_maps(
+            model, content_path, style_path, len(style_layers))
+        print(style_features)
+        print(content_features)
 
-    @staticmethod
-    def transfer_style(_content, _style):
-        content, style = tools.load_images(_content, _style)
+        # Get Gram Matrix per each Style Layer
+        gram_style_features = [losses._gram_matrix(
+            style_feature) for style_feature in style_features]
+
+        # Set Init Image
+        if init_image is None:
+            init_image = tools._load_and_process_img(content_path)
+        else:
+            init_image = tf.keras.applications.vgg19.preprocess_input(
+                init_image)
+
+        # Set in Tensor init image
+        init_image = tfe.Variable(init_image, dtype=tf.float32)
+
+        # Create our optimizer
+        opt = tf.train.AdamOptimizer(learning_rate=5, beta1=0.99, epsilon=1e-1)
+
+        iter_count = 1
+        best_loss, best_img = float('inf'), None
+
+        loss_weights = (style_weight, content_weight)
+
+        cfg = {
+            'model': model,
+            'loss_weights': loss_weights,
+            'init_image': init_image,
+            'gram_style_features': gram_style_features,
+            'content_features': content_features
+        }
+        # For displaying
+        num_rows = 2
+        num_cols = 5
+        display_interval = num_iter/(num_rows*num_cols)
+        start_time = time.time()
+        global_start = time.time()
+
+        norm_means = np.array([103.939, 116.779, 123.68])
+        min_vals = -norm_means
+        max_vals = 255 - norm_means
+
+        for i in range(num_iter):
+            # Compute grads
+            grads, all_loss = compute_grads(cfg)
+
+            # Get Losses
+            loss, style_score, content_score = all_loss
+
+            # Step init_image
+            opt.apply_gradients([(grads, init_image)])
+
+            # Clip Values between VGG format valuees
+            clipped = tf.clip_by_value(init_image, min_vals, max_vals)
+            # Assingn values Clipped to the image (Gradients)
+            init_image.assign(clipped)
+            end_time = time.time()
+
+            if i % display_interval == 0:
+                start_time = time.time()

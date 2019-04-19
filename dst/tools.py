@@ -83,11 +83,6 @@ def _scale_image(image, max_dim=512):
                          round(image.size[1]*scale)), Image.ANTIALIAS)
 
 
-def get_image_dim(image):
-    ''''''
-    return image.shape
-
-
 def _load_image(path_image, max_dim=512):
     img = _open_image(path_image)
     img = _scale_image(img, max_dim)
@@ -180,3 +175,39 @@ def _get_version():
         sys.version_info[0], sys.version_info[1]))
     print('TensoFlow version: ', tf.__version__)
     print('Keras version: ', keras.__version__)
+
+
+def _get_layers(model, layers):
+    ''' Get layers specify in layers vector
+        Args:
+            model: Model
+            layers: Array with the name of the layers
+        Return:
+                Array with the specific layers
+    '''
+    return [model.get_layer(layer).output for layer in layers]
+
+
+def _get_dict_layers(model):
+    ''' Get Layers in the dict in format {name:layer}
+        Args:
+            model: Model
+        Return:
+                Dictionary with the layers and names.
+    '''
+    layers = {layer.name: layer.output for layer in model.layers}
+    return layers
+
+
+def _freeze_layers(model):
+    """Freeze layers in the model
+        Args:
+            model: Model
+    """
+    for layer in model.layers:
+        layer.trainable = False
+    return model
+
+
+def generate_image(shape):
+    return np.random.rand(shape)*255
