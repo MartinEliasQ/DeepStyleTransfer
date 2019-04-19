@@ -90,7 +90,7 @@ class dst(object):
     def tranfer_style(content_path, style_path,
                       content_layers=CONTENT_LAYERS_LIST,
                       style_layers=STYLE_LAYERS_LIST,
-                      content_weight=1e5, style_weight=1e-2,
+                      content_weight=1e3, style_weight=1e-2,
                       variation_weight=0,
                       num_iter=1000, init_image=None):
 
