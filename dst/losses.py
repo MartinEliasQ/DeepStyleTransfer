@@ -12,9 +12,6 @@ def gram_matrix(tensor):
 
 def style_loss(generated_style, gram_target):
 
-    generated_style = generated_style[0]
-    gram_target = gram_target[0]
-
     height, width, channels = generated_style.get_shape().as_list()
     gram_generated_style = gram_matrix(generated_style)
     # / (4. * (channels ** 2) * (width * height) ** 2)
@@ -23,7 +20,7 @@ def style_loss(generated_style, gram_target):
 
 def content_loss(generated, content):
     ''''''
-    return tf.reduce_mean(tf.square(content - generated))
+    return tf.reduce_mean(tf.square(generated - content))
 
 
 def total_variation_loss(x):
@@ -44,7 +41,7 @@ def total_loss(losses):
 def compute_loss(model, loss_weights, init_image, gram_style_features,
                  content_features, num_style_layers):
 
-    style_weight, content_weight, variation_weight = loss_weights
+    style_weight, content_weight = loss_weights
 
     # Feed our init image through our model. This will give us the content and
     # style representations at our desired layers. Since we're using eager
@@ -56,29 +53,26 @@ def compute_loss(model, loss_weights, init_image, gram_style_features,
 
     style_score = 0
     content_score = 0
-    variation_score = 0
 
     # Accumulate style losses from all layers
     # Here, we equally weight each contribution of each loss layer
     weight_per_style_layer = 1.0 / float(num_style_layers)
+
     for target_style, comb_style in zip(gram_style_features,
                                         style_output_features):
         style_score += weight_per_style_layer * \
-            style_loss(comb_style, target_style)
+            style_loss(comb_style[0], target_style)
 
     # Accumulate content losses from all layers
     weight_per_content_layer = 1.0 / float(1)
     for target_content, comb_content in zip(content_features,
                                             content_output_features):
         content_score += weight_per_content_layer * \
-            content_loss(comb_content, target_content)
-    # Variation loss
-    variation_score = total_variation_loss(init_image)
+            content_loss(comb_content[0], target_content)
 
     style_score *= style_weight
     content_score *= content_weight
-    variation_score *= variation_weight
 
     # Get total loss
-    loss = style_score + content_score + variation_score
-    return loss, style_score, content_score, variation_score
+    loss = style_score + content_score
+    return loss, style_score, content_score

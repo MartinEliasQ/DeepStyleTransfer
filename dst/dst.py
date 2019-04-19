@@ -58,9 +58,9 @@ class dst(object):
         style_outputs = model(style_image)
         content_outputs = model(content_image)
 
-        style_features = [style_layer
+        style_features = [style_layer[0]
                           for style_layer in style_outputs[:num_style_layers]]
-        content_features = [content_layer
+        content_features = [content_layer[0]
                             for content_layer
                             in content_outputs[num_style_layers:]]
 
@@ -90,15 +90,9 @@ class dst(object):
     def tranfer_style(content_path, style_path,
                       content_layers=CONTENT_LAYERS_LIST,
                       style_layers=STYLE_LAYERS_LIST,
-                      content_weight=1e5, style_weight=1e-3,
+                      content_weight=1e5, style_weight=1e-2,
                       variation_weight=0,
-                      num_iter=1000, init_image=None, variation=None):
-
-        print(content_path, style_path,
-              content_layers,
-              style_layers,
-              content_weight, style_weight,
-              num_iter, init_image)
+                      num_iter=1000, init_image=None):
 
         # Get New Model with the respective outputs(CNN layers)
         model = dst.get_model(content_layers, style_layers)
@@ -106,8 +100,6 @@ class dst(object):
         # Get  feacture maps for Style and Content
         style_features, content_features = dst._get_feactuere_maps(
             model, content_path, style_path, len(style_layers))
-        print(style_features)
-        print(content_features)
 
         # Get Gram Matrix per each Style Layer
         gram_style_features = [losses.gram_matrix(
@@ -155,7 +147,7 @@ class dst(object):
             grads, all_loss = dst.compute_grads(cfg)
 
             # Get Losses
-            loss, style_score, content_score, variation_score = all_loss
+            loss, style_score, content_score = all_loss
 
             # Step init_image
             opt.apply_gradients([(grads, init_image)])
