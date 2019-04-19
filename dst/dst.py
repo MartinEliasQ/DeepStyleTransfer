@@ -147,7 +147,7 @@ class dst(object):
             grads, all_loss = dst.compute_grads(cfg)
 
             # Get Losses
-            loss, style_score, content_score = all_loss
+            loss, style_score, content_score, variation_score = all_loss
 
             # Step init_image
             opt.apply_gradients([(grads, init_image)])
