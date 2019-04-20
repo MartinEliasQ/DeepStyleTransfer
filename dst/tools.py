@@ -83,8 +83,8 @@ def _scale_image(image, max_dim=512):
                          round(image.size[1]*scale)), Image.ANTIALIAS)
 
 
-def _load_image(path_image, max_dim=512):
-    img = _open_image(path_image)
+def _load_image(path_image, max_dim=512, url=False):
+    img = _open_image(path_image, url)
     img = _scale_image(img, max_dim)
     img = _image_to_array(img)
     img = _add_dim(img)
@@ -109,7 +109,7 @@ def imshow(img, title=None):
     plt.imshow(out)
 
 
-def _load_and_process_img(path_image, max_dim=512):
+def _load_and_process_img(path_image, max_dim=512, url=False):
     ''' Load image(open, scale, convert in numpy array and add batch dim to
          image) and preprocess image in the VGG format. (Color format BGR and 
          normalize pixels with the mean)
@@ -120,7 +120,7 @@ def _load_and_process_img(path_image, max_dim=512):
         Returns:
                 image preprocess(VGG format)
     '''
-    img = _load_image(path_image, max_dim)
+    img = _load_image(path_image, max_dim, url)
 
     # Preprocess input image to vgg requierements
     # That is a normalize(central) pixel of image
