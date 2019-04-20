@@ -56,6 +56,7 @@ class dst(object):
                             url=False):
         content_image = tools._load_and_process_img(content_path, url=url)
         style_image = tools._load_and_process_img(style_path, url=url)
+
         style_outputs = model(style_image)
         content_outputs = model(content_image)
 
@@ -100,7 +101,7 @@ class dst(object):
 
         # Get  feacture maps for Style and Content
         style_features, content_features = dst._get_feactuere_maps(
-            model, content_path, style_path, len(style_layers))
+            model, content_path, style_path, len(style_layers), url=url)
 
         # Get Gram Matrix per each Style Layer
         gram_style_features = [losses.gram_matrix(
@@ -112,7 +113,7 @@ class dst(object):
         else:
             print("Random image Generated")
             partial_image = tools._del_dim(
-                tools._load_image(content_path, url))
+                tools._load_image(content_path, url=url))
             h, w, c = partial_image.shape
             random_image = tools._add_dim(np.random.rand(h, w, c) * 255)
 
