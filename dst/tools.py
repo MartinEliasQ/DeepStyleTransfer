@@ -84,7 +84,8 @@ def _scale_image(image, max_dim=512):
 
 
 def _load_image(path_image, max_dim=512, url=False):
-    img = _open_image(path_image, url)
+    print()
+    img = _open_image(path_image, url=url)
     img = _scale_image(img, max_dim)
     img = _image_to_array(img)
     img = _add_dim(img)
@@ -120,7 +121,8 @@ def _load_and_process_img(path_image, max_dim=512, url=False):
         Returns:
                 image preprocess(VGG format)
     '''
-    img = _load_image(path_image, max_dim, url)
+    print("IMAGE URL", url)
+    img = _load_image(path_image, max_dim, url=url)
 
     # Preprocess input image to vgg requierements
     # That is a normalize(central) pixel of image
