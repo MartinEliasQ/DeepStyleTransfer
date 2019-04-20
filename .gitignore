@@ -125,6 +125,3 @@ dmypy.json
 
 #vscodefiles
 .vscode
-
-#ImageFolders
-images/
