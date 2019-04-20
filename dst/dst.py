@@ -52,9 +52,10 @@ class dst(object):
         return vgg19
 
     @staticmethod
-    def _get_feactuere_maps(model, content_path, style_path, num_style_layers):
-        content_image = tools._load_and_process_img(content_path)
-        style_image = tools._load_and_process_img(style_path)
+    def _get_feactuere_maps(model, content_path, style_path, num_style_layers,
+                            url=False):
+        content_image = tools._load_and_process_img(content_path, url=url)
+        style_image = tools._load_and_process_img(style_path, url=url)
         style_outputs = model(style_image)
         content_outputs = model(content_image)
 
@@ -92,7 +93,7 @@ class dst(object):
                       style_layers=STYLE_LAYERS_LIST,
                       content_weight=1e3, style_weight=1e-2,
                       variation_weight=0,
-                      num_iter=1000, init=True):
+                      num_iter=1000, init=True, url=False):
 
         # Get New Model with the respective outputs(CNN layers)
         model = dst.get_model(content_layers, style_layers)
@@ -107,10 +108,11 @@ class dst(object):
 
         # Set Init Image
         if init is True:
-            init_image = tools._load_and_process_img(content_path)
+            init_image = tools._load_and_process_img(content_path, url=url)
         else:
             print("Random image Generated")
-            partial_image = tools._del_dim(tools._load_image(content_path))
+            partial_image = tools._del_dim(
+                tools._load_image(content_path, url))
             h, w, c = partial_image.shape
             random_image = tools._add_dim(np.random.rand(h, w, c) * 255)
 
