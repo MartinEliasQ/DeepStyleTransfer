@@ -121,7 +121,6 @@ def _load_and_process_img(path_image, max_dim=512, url=False):
         Returns:
                 image preprocess(VGG format)
     '''
-    print("IMAGE URL", url)
     img = _load_image(path_image, max_dim, url=url)
 
     # Preprocess input image to vgg requierements
