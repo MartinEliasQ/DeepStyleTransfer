@@ -9,4 +9,5 @@
 [Neural Style Transfer: Creating Art with Deep Learning using tf.keras and eager execution](https://medium.com/tensorflow/neural-style-transfer-creating-art-with-deep-learning-using-tf-keras-and-eager-execution-7d541ac31398 "Blog")
 
 [Neural Style Transfer In Keras](https://markojerkic.com/style-transfer-keras/ "Blog")
+
 [How convolutional neural networks see the world](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html "Blog")
