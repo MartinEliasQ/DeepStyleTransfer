@@ -18,7 +18,6 @@ import time
 
 K = keras.backend
 tf.enable_eager_execution()
-print("Eager execution: {}".format(tf.executing_eagerly()))
 CONTENT_LAYERS_LIST = ['block5_conv2']
 STYLE_LAYERS_LIST = ['block1_conv1',
                      'block2_conv1',
