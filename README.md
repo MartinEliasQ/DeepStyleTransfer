@@ -3,6 +3,7 @@
 En la carpeta notebooks/ se encuentran los cuadernos con la base teorica, la implementacion y los experimentos realizados.
 Puede explorar los notebooks que  estan ordenados  en los siguientes enlaces :
 
+Por : Angelorwer Santana Velasques & Martin Elias Quintero Osorio
 [1. Aprendizaje profundo para la transferencia de estilo](https://nbviewer.jupyter.org/github/cactusAi/DeepStyleTransfer/blob/master/notebooks/1.Aprendizaje%20profundo%20para%20la%20transferencia%20de%20estilo.ipynb "Notebook 1")
 
 [2. Implementación](https://nbviewer.jupyter.org/github/cactusAi/DeepStyleTransfer/blob/master/notebooks/2.%20Implementacion.ipynb "Notebook 2")
