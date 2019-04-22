@@ -8,7 +8,6 @@ Puede explorar los notebooks en los siguientes enlaces :
 [2. Implementación](https://nbviewer.jupyter.org/github/cactusAi/DeepStyleTransfer/blob/master/notebooks/2.%20Implementacion.ipynb "Notebook 2")
 
 [3. Experimentos](https://colab.research.google.com/drive/1C9hawF7L4wy9bna_s_QZvZ538Sl51nrV?authuser=2#scrollTo=vsbMLyUmD-9E&forceEdit=true&offline=true&sandboxMode=true "Notebook 3")
-
 [![Open In Colab: 3. Experimentos](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1C9hawF7L4wy9bna_s_QZvZ538Sl51nrV?authuser=2#scrollTo=vsbMLyUmD-9E&forceEdit=true&offline=true&sandboxMode=true)
 
 _____________________________________
