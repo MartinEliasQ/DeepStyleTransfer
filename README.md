@@ -2,7 +2,7 @@
 ##### Por : Angelorwer Santana Velasques & Martin Elias Quintero Osorio
 
 ### Orden de notebooks
-En la carpeta notebooks/ se encuentran los cuadernos con la base teorica, la implementacion y los experimentos realizados.
+En la carpeta notebooks/ se encuentran los cuadernos con la base teórica, la implementación y los experimentos realizados.
 Puede explorar los notebooks que  estan ordenados  en los siguientes enlaces :
 
 
@@ -14,7 +14,7 @@ Puede explorar los notebooks que  estan ordenados  en los siguientes enlaces :
 [![Open In Colab: 3. Experimentos](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1C9hawF7L4wy9bna_s_QZvZ538Sl51nrV?authuser=2#scrollTo=vsbMLyUmD-9E&forceEdit=true&offline=true&sandboxMode=true)
 También puede clonar este repositorio. Los paquete necesarios estan en el archivo requirements.txt
 
-Próximamente se actualizara la documentación para mostrar el uso del API del paquete.
+Próximamente se actualizará la documentación para mostrar el uso del API del paquete.
 _____________________________________
 ## References
 [Image Style Transfer Using Convolutional Neural Networks](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Gatys_Image_Style_Transfer_CVPR_2016_paper.pdf "Paper")
