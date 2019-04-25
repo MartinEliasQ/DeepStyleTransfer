@@ -13,6 +13,9 @@ Puede explorar los notebooks que  estan ordenados  en los siguientes enlaces :
 [3. Experimentos](https://colab.research.google.com/drive/1C9hawF7L4wy9bna_s_QZvZ538Sl51nrV?authuser=2#scrollTo=vsbMLyUmD-9E&forceEdit=true&offline=true&sandboxMode=true "Notebook 3")
 [![Open In Colab: 3. Experimentos](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1C9hawF7L4wy9bna_s_QZvZ538Sl51nrV?authuser=2#scrollTo=vsbMLyUmD-9E&forceEdit=true&offline=true&sandboxMode=true)
 
+
+[4. Presentación](https://docs.google.com/presentation/d/170MbPF1cNPUVq1GWjhwpTuQBz4kegvthyMs1P3u5xHw/edit?usp=sharing)
+
 También puede clonar este repositorio. Los paquete necesarios estan en el archivo requirements.txt
 
 Próximamente se actualizará la documentación para mostrar el uso del API del paquete.
